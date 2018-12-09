@@ -7,6 +7,7 @@ from scipy.spatial import KDTree
 
 import rospy
 from geometry_msgs.msg import PoseStamped
+from std_msgs.msg import Int32
 from styx_msgs.msg import Lane, Waypoint
 
 '''
@@ -40,6 +41,7 @@ class WaypointUpdater(object):
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
         # TODO: Add other member variables you need below
+        self.base_lane = None
         self.pose = None
         self.base_waypoints = None
         self.waypoints_2d = None
@@ -94,7 +96,7 @@ class WaypointUpdater(object):
 
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
-        base_waypoints = self.base_line.waypoints[closest_idx:farthest_idx]
+        base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
 
         if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
             lane.waypoints = base_waypoints
@@ -130,7 +132,7 @@ class WaypointUpdater(object):
         # TODO: Implement
         self.base_waypoints = waypoints
         if not self.waypoints_2d:
-            self.waypoints_2d = [[waypoint.pose.pose.position.x, waypoint.pose.pose.position.y] for waypoint in waypoints.waypoint]
+            self.waypoints_2d = [[waypoint.pose.pose.position.x, waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
 
     def traffic_cb(self, msg):
