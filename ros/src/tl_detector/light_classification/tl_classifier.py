@@ -15,7 +15,8 @@ LABELS = [
 
 class TLClassifier(object):
     def __init__(self):
-        model = os.path.join(os.path.abspath(os.path.curpath), "ssd_mobilenet_v2_coco.pb")
+        model = os.path.join("~", "workspace", "weights", "ssdlite_mobilenet_v2_coco_2018_05_09", "frozen_inference_graph.pb")
+        assert os.path.exists(model), "model file not found at [%s]" % (model)
 
         # Read graph
         graph = tf.Graph()
