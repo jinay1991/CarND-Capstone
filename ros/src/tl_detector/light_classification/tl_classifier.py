@@ -62,7 +62,7 @@ class TLClassifier(object):
         # identify type of signal (RED/GREEN/YELLOW)
         for i in range(boxes.shape[0]):
             class_idx = classes[i]
-            
+
             if scores[i] > 0.50:
                 return LABELS[int(class_idx)]
 
