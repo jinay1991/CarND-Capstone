@@ -3,19 +3,21 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
+import rospy
 
 from styx_msgs.msg import TrafficLight
 
 LABELS = [
-    TrafficLight.UNKNOWN,
+    0,
     TrafficLight.RED,
     TrafficLight.YELLOW,
-    TrafficLight.GREEN
+    TrafficLight.GREEN,
+    TrafficLight.UNKNOWN
 ]
 
 class TLClassifier(object):
     def __init__(self):
-        model = os.path.join("~", "workspace", "weights", "ssdlite_mobilenet_v2_coco_2018_05_09", "frozen_inference_graph.pb")
+        model = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frozen_inference_graph.pb")
         assert os.path.exists(model), "model file not found at [%s]" % (model)
 
         # Read graph
@@ -59,10 +61,9 @@ class TLClassifier(object):
 
         # identify type of signal (RED/GREEN/YELLOW)
         for i in range(boxes.shape[0]):
-            class_idx = classes[i] - 1
-
-            if scores[i] > 0.30:
-                if class_idx in LABELS[1:]:
-                    return class_idx
+            class_idx = classes[i]
+            
+            if scores[i] > 0.50:
+                return LABELS[int(class_idx)]
 
         return TrafficLight.UNKNOWN
