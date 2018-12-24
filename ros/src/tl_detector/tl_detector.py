@@ -11,7 +11,7 @@ from light_classification.tl_classifier import TLClassifier
 from sensor_msgs.msg import Image
 from std_msgs.msg import Int32
 from styx_msgs.msg import Lane, TrafficLight, TrafficLightArray
-import time 
+import time
 
 STATE_COUNT_THRESHOLD = 3
 
@@ -24,7 +24,7 @@ class TLDetector(object):
 
         self.waypoint_tree = None
         self.waypoints_2d = None
-        
+
         self.elapsed_time = 0
 
         self.camera_image = None
@@ -83,7 +83,7 @@ class TLDetector(object):
         """
         if self.elapsed_time > 0:
             self.elapsed_time -= 0.3
-            return 
+            return
         self.has_image = True
         self.camera_image = msg
         start_time = time.time()
