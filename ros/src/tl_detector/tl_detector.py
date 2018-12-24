@@ -11,6 +11,7 @@ from light_classification.tl_classifier import TLClassifier
 from sensor_msgs.msg import Image
 from std_msgs.msg import Int32
 from styx_msgs.msg import Lane, TrafficLight, TrafficLightArray
+import time 
 
 STATE_COUNT_THRESHOLD = 3
 
@@ -23,6 +24,8 @@ class TLDetector(object):
 
         self.waypoint_tree = None
         self.waypoints_2d = None
+        
+        self.elapsed_time = 0
 
         self.camera_image = None
         self.lights = []
@@ -78,10 +81,14 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+        if self.elapsed_time > 0:
+            self.elapsed_time -= 0.3
+            return 
         self.has_image = True
         self.camera_image = msg
+        start_time = time.time()
         light_wp, state = self.process_traffic_lights()
-
+        self.elapsed_time = time.time() - start_time
         '''
         Publish upcoming red lights at camera frequency.
         Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
