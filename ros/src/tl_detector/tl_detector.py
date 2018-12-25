@@ -24,9 +24,6 @@ class TLDetector(object):
 
         self.waypoint_tree = None
         self.waypoints_2d = None
-
-        self.elapsed_time = 0
-
         self.camera_image = None
         self.lights = []
 
@@ -81,14 +78,9 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
-        if self.elapsed_time > 0:
-            self.elapsed_time -= 0.3
-            return
         self.has_image = True
         self.camera_image = msg
-        start_time = time.time()
         light_wp, state = self.process_traffic_lights()
-        self.elapsed_time = time.time() - start_time
         '''
         Publish upcoming red lights at camera frequency.
         Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
@@ -132,7 +124,7 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        #return light.state
+        # return light.state
         if(not self.has_image):
             self.prev_light_loc = None
             return False
@@ -141,7 +133,7 @@ class TLDetector(object):
 
         # Get classification
         light_state = self.light_classifier.get_classification(cv_image)
-        rospy.loginfo("Received light state: %s" % (light_state))
+        rospy.logdebug("Received light state: %s" % (light_state))
         return light_state
 
 

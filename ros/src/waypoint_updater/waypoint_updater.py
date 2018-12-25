@@ -53,7 +53,7 @@ class WaypointUpdater(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(50)
+        rate = rospy.Rate(20) # publish at every 50ms as Traffic Light Detection takes 30-40ms
         while not rospy.is_shutdown():
             if self.pose and self.base_lane:
                 # Get closest waypoint
@@ -93,7 +93,7 @@ class WaypointUpdater(object):
 
     def generate_lane(self):
         lane = Lane()
-        # lane.header = self.base_waypoints.header
+        lane.header = self.base_lane.header
 
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS

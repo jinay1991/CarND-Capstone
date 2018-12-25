@@ -4,11 +4,12 @@ import cv2
 import numpy as np
 import tensorflow as tf
 import rospy
+import time
 
 from styx_msgs.msg import TrafficLight
 
 LABELS = [
-    0,
+    TrafficLight.UNKNOWN,
     TrafficLight.RED,
     TrafficLight.YELLOW,
     TrafficLight.GREEN,
@@ -20,6 +21,8 @@ class TLClassifier(object):
         model = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frozen_inference_graph.pb")
         assert os.path.exists(model), "model file not found at [%s]" % (model)
 
+        self.time_taken_for_inference = 0
+        
         # Read graph
         graph = tf.Graph()
         graph_def = tf.GraphDef()
@@ -33,6 +36,7 @@ class TLClassifier(object):
         self.detection_boxes = graph.get_tensor_by_name("import/detection_boxes:0")
         self.detection_scores = graph.get_tensor_by_name("import/detection_scores:0")
         self.detection_classes = graph.get_tensor_by_name("import/detection_classes:0")
+        self.num_detections = graph.get_tensor_by_name("import/num_detections:0")
 
         # Load graph
         self.session = tf.Session(graph=graph)
@@ -53,14 +57,18 @@ class TLClassifier(object):
         image_ = image_.astype(np.float32)
 
         # traffic light detection
-        classes, scores, boxes = self.session.run([self.detection_classes, self.detection_scores, self.detection_boxes],
+        start_time = time.time()
+        num_detections, classes, scores, boxes = self.session.run([self.num_detections, self.detection_classes, self.detection_scores, self.detection_boxes],
                                                   feed_dict={self.image_tensor: np.expand_dims(image_, axis=0)})
+        self.time_taken_for_inference = time.time() - start_time
+        rospy.logdebug("Time taken for inference: %s" % (self.time_taken_for_inference))
         classes = np.squeeze(classes)
         scores = np.squeeze(scores)
         boxes = np.squeeze(boxes)
+        num_detections = np.squeeze(num_detections).astype(np.uint32)
 
         # identify type of signal (RED/GREEN/YELLOW)
-        for i in range(boxes.shape[0]):
+        for i in range(num_detections):
             class_idx = classes[i]
 
             if scores[i] > 0.50:
