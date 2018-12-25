@@ -87,7 +87,7 @@ class WaypointUpdater(object):
 
     def generate_lane(self):
         lane = Lane()
-        # lane.header = self.base_lane.header
+        lane.header = self.base_lane.header
 
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
@@ -107,7 +107,7 @@ class WaypointUpdater(object):
             p = Waypoint()
             p.pose = wp.pose
 
-            stop_idx = max(self.stopline_wp_idx - closest_idx - 6, 0) # 5 waypoints back from line so front of car stops at line
+            stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0) # 5 waypoints back from line so front of car stops at line
             dist = self.distance(waypoints, i, stop_idx)
             vel = math.sqrt(2 * MAX_DECEL * dist)
             if vel < 1.0:

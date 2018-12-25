@@ -40,7 +40,7 @@ class TLDetector(object):
         rely on the position of the light and the camera image to predict it.
         '''
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
-        sub6 = rospy.Subscriber('/image_color', Image, self.image_cb)
+        sub6 = rospy.Subscriber('/image_color', Image, self.image_cb, queue_size=1)
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
@@ -80,10 +80,9 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
-        # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
-        if self.time_taken_for_image_processing > 0:
+        if self.time_taken_for_image_processing > 0.:
             self.time_taken_for_image_processing -= 10.0 / 100.0
-            # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
+            self.has_image = False
             return
         self.has_image = True
         self.camera_image = msg
@@ -142,7 +141,6 @@ class TLDetector(object):
 
         # Get classification
         light_state = self.light_classifier.get_classification(cv_image)
-        rospy.logdebug("Received light state: %s" % (light_state))
         return light_state
 
 

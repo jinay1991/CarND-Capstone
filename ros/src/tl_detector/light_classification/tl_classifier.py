@@ -15,6 +15,9 @@ LABELS = [
     TrafficLight.GREEN,
     TrafficLight.UNKNOWN
 ]
+LABELS_NAME = [
+    "UNKNOWN", "RED", "YELLOW", "GREEN", "UNKNOWN"
+]
 
 class TLClassifier(object):
     def __init__(self):
@@ -38,8 +41,11 @@ class TLClassifier(object):
         self.detection_classes = graph.get_tensor_by_name("import/detection_classes:0")
         self.num_detections = graph.get_tensor_by_name("import/num_detections:0")
 
+        config = tf.ConfigProto()
+        config.graph_options.optimizer_options.global_jit_level = tf.OptimizerOptions.ON_1
+
         # Load graph
-        self.session = tf.Session(graph=graph)
+        self.session = tf.Session(graph=graph, config=config)
 
     def get_classification(self, image):
         """Determines the color of the traffic light in the image
@@ -61,7 +67,7 @@ class TLClassifier(object):
         num_detections, classes, scores, boxes = self.session.run([self.num_detections, self.detection_classes, self.detection_scores, self.detection_boxes],
                                                   feed_dict={self.image_tensor: np.expand_dims(image_, axis=0)})
         self.time_taken_for_inference = time.time() - start_time
-        rospy.logdebug("Time taken for inference: %s" % (self.time_taken_for_inference))
+        rospy.loginfo("Time taken for inference: %s" % (self.time_taken_for_inference))
         classes = np.squeeze(classes)
         scores = np.squeeze(scores)
         boxes = np.squeeze(boxes)
@@ -72,6 +78,7 @@ class TLClassifier(object):
             class_idx = classes[i]
 
             if scores[i] > 0.50:
+                rospy.loginfo("Identified Traffic Light: %s" % (LABELS_NAME[int(class_idx)]))
                 return LABELS[int(class_idx)]
 
         return TrafficLight.UNKNOWN
