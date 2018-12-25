@@ -53,12 +53,10 @@ class WaypointUpdater(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(20) # publish at every 50ms as Traffic Light Detection takes 30-40ms
+        rate = rospy.Rate(10) # publish at 25Hz as Traffic Light Detection takes 30-40ms
         while not rospy.is_shutdown():
             if self.pose and self.base_lane:
-                # Get closest waypoint
-                # closest_waypoint_idx = self.get_closest_waypoint_idx()
-                self.publish_waypoints()#closest_waypoint_idx)
+                self.publish_waypoints()
             rate.sleep()
 
     def get_closest_waypoint_idx(self):
@@ -83,17 +81,13 @@ class WaypointUpdater(object):
         return closest_idx
 
     def publish_waypoints(self):
-        # lane = Lane()
-        # lane.header = self.base_waypoints.header
-        # lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
-        # self.final_waypoints_pub.publish(lane)
         final_lane = self.generate_lane()
         self.final_waypoints_pub.publish(final_lane)
 
 
     def generate_lane(self):
         lane = Lane()
-        lane.header = self.base_lane.header
+        # lane.header = self.base_lane.header
 
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
@@ -116,7 +110,7 @@ class WaypointUpdater(object):
             stop_idx = max(self.stopline_wp_idx - closest_idx - 6, 0) # 5 waypoints back from line so front of car stops at line
             dist = self.distance(waypoints, i, stop_idx)
             vel = math.sqrt(2 * MAX_DECEL * dist)
-            if vel < 0.75:
+            if vel < 1.0:
                 vel = 0.
 
             p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x)

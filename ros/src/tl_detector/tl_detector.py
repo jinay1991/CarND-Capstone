@@ -22,6 +22,8 @@ class TLDetector(object):
         self.pose = None
         self.waypoints = None
 
+        self.time_taken_for_image_processing = 0
+        
         self.waypoint_tree = None
         self.waypoints_2d = None
         self.camera_image = None
@@ -78,9 +80,16 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+        # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
+        if self.time_taken_for_image_processing > 0:
+            self.time_taken_for_image_processing -= 10.0 / 100.0
+            # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
+            return
         self.has_image = True
         self.camera_image = msg
+        start_time = time.time()
         light_wp, state = self.process_traffic_lights()
+        self.time_taken_for_image_processing = time.time() - start_time
         '''
         Publish upcoming red lights at camera frequency.
         Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
