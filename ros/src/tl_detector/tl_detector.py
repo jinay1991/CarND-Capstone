@@ -14,6 +14,7 @@ from styx_msgs.msg import Lane, TrafficLight, TrafficLightArray
 import time
 
 STATE_COUNT_THRESHOLD = 3
+LOOKAHEAD_WPS = 50
 
 class TLDetector(object):
     def __init__(self):
@@ -82,7 +83,6 @@ class TLDetector(object):
         """
         if self.time_taken_for_image_processing > 0.:
             self.time_taken_for_image_processing -= 10.0 / 100.0
-            self.has_image = False
             return
         self.has_image = True
         self.camera_image = msg
@@ -170,8 +170,10 @@ class TLDetector(object):
                 d = temp_wp_idx - car_wp_idx
                 if d >= 0 and d < diff:
                     diff = d
-                    closest_light = light
-                    line_wp_idx = temp_wp_idx
+                    # to improve performance, perform classification only when there is light intercepting waypoints
+                    if d < LOOKAHEAD_WPS * 2:
+                        closest_light = light
+                        line_wp_idx = temp_wp_idx
 
         if closest_light:
             state = self.get_light_state(closest_light)

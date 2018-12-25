@@ -16,7 +16,11 @@ LABELS = [
     TrafficLight.UNKNOWN
 ]
 LABELS_NAME = [
-    "UNKNOWN", "RED", "YELLOW", "GREEN", "UNKNOWN"
+    "UNKNOWN", 
+    "RED", 
+    "YELLOW", 
+    "GREEN", 
+    "UNKNOWN"
 ]
 
 class TLClassifier(object):
@@ -67,7 +71,7 @@ class TLClassifier(object):
         num_detections, classes, scores, boxes = self.session.run([self.num_detections, self.detection_classes, self.detection_scores, self.detection_boxes],
                                                   feed_dict={self.image_tensor: np.expand_dims(image_, axis=0)})
         self.time_taken_for_inference = time.time() - start_time
-        rospy.loginfo("Time taken for inference: %s" % (self.time_taken_for_inference))
+        rospy.logdebug("Time taken for inference: %s" % (self.time_taken_for_inference))
         classes = np.squeeze(classes)
         scores = np.squeeze(scores)
         boxes = np.squeeze(boxes)
@@ -78,7 +82,7 @@ class TLClassifier(object):
             class_idx = classes[i]
 
             if scores[i] > 0.50:
-                rospy.loginfo("Identified Traffic Light: %s" % (LABELS_NAME[int(class_idx)]))
+                rospy.logdebug("Identified Traffic Light: %s" % (LABELS_NAME[int(class_idx)]))
                 return LABELS[int(class_idx)]
 
         return TrafficLight.UNKNOWN
