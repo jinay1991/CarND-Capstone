@@ -1,4 +1,31 @@
-This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
+# Udacity Self-Driving Engineer Nanodegree - System Integration Project (CarND-Capstone)
+
+This is individual submission and do not intend to run on Carla (Real Car). This was tested and submitted against Simulation Environment.
+
+
+
+| Student Name | Udacity email Id    |
+| ------------ | ------------------- |
+| Jinay Patel  | jinay1991@gmail.com |
+
+# Project [Rubric](https://review.udacity.com/#!/rubrics/1140/view)
+
+## Vehicle Operation
+
+1. Did the car navigate the track successfully? Expected: The submitted code must work successfully to navigate Carla around the test track.
+
+    Yes, car was able to drive through track while successfully identifying traffic light states and was able to obey the speed limit rules. Car was stopping before stop line when `RED` traffic light was observed, till traffic light is `GREEN`.
+
+**Notes:**
+
+1. Tested on simulation only.
+2. Due to the performance issues when enabled `camera`, traffic light identification is performed only when there is a traffic light near by (i.e. 100 waypoints). This had avoided unnecessary inferencing for traffic light detection.
+3. For training traffic light detector, [dataset](https://drive.google.com/file/d/0B-Eiyn-CUQtxdUZWMkFfQzdObUE/view?usp=sharing) was used with [TensorFlow Object Detection API](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) to retrain [ssd_mobilenet_v1_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2018_01_28.tar.gz). For this referred [this](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI) repository.
+4. Project Introduction can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
+5.
+
+
+# Installation
 
 Please use **one** of the two installation options, either native **or** docker installation.
 
