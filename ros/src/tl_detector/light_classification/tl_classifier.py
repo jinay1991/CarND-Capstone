@@ -82,7 +82,7 @@ class TLClassifier(object):
             class_idx = classes[i]
 
             if scores[i] > 0.50:
-                rospy.logdebug("Identified Traffic Light: %s" % (LABELS_NAME[int(class_idx)]))
+                rospy.loginfo("Identified Traffic Light: %s" % (LABELS_NAME[int(class_idx)]))
                 return LABELS[int(class_idx)]
 
         return TrafficLight.UNKNOWN

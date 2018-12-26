@@ -83,7 +83,7 @@ class TLDetector(object):
         """
         if self.time_taken_for_image_processing > 0.:
             self.time_taken_for_image_processing -= 10.0 / 100.0
-            return
+            # return
         self.has_image = True
         self.camera_image = msg
         start_time = time.time()
