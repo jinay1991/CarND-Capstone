@@ -27,6 +27,10 @@ This is **individual submission** and do not intend to run on Carla (Real Car). 
 ![image2](examples/highway_run.png)
 ![image3](examples/green_light_go.png)
 
+# Video Demo
+
+[![](https://img.youtube.com/vi/_60tPSV5N5I/0.jpg)](https://www.youtube.com/watch?v=_60tPSV5N5I)
+
 # Installation
 
 Please use **one** of the two installation options, either native **or** docker installation.
