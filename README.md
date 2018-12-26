@@ -1,8 +1,8 @@
 # Udacity Self-Driving Engineer Nanodegree - System Integration Project (CarND-Capstone)
 
-This is individual submission and do not intend to run on Carla (Real Car). This was tested and submitted against Simulation Environment.
+## Individual Submission
 
-
+This is **individual submission** and do not intend to run on Carla (Real Car). This was tested and submitted against Simulation Environment.
 
 | Student Name | Udacity email Id    |
 | ------------ | ------------------- |
