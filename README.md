@@ -22,8 +22,10 @@ This is individual submission and do not intend to run on Carla (Real Car). This
 2. Due to the performance issues when enabled `camera`, traffic light identification is performed only when there is a traffic light near by (i.e. 100 waypoints). This had avoided unnecessary inferencing for traffic light detection.
 3. For training traffic light detector, [dataset](https://drive.google.com/file/d/0B-Eiyn-CUQtxdUZWMkFfQzdObUE/view?usp=sharing) was used with [TensorFlow Object Detection API](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) to retrain [ssd_mobilenet_v1_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2018_01_28.tar.gz). For this referred [this](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI) repository.
 4. Project Introduction can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
-5.
 
+![image1](examples/red_light_stop.png)
+![image2](examples/highway_run.png)
+![image3](examples/green_light_go.png)
 
 # Installation
 
